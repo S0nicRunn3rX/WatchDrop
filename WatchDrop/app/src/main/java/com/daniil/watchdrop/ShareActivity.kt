@@ -335,6 +335,7 @@ private fun WearShareScreen(
     onPermission: () -> Unit,
     onClose: () -> Unit
 ) {
+    val context = LocalContext.current
     AppScaffold {
         val listState = rememberTransformingLazyColumnState()
         val transformationSpec = rememberTransformationSpec()
@@ -416,7 +417,7 @@ private fun WearShareScreen(
                                 .transformedHeight(this, transformationSpec)
                         )
                     }
-                    if (!PermissionUtils.hasBluetoothConnect(LocalContext.current)) {
+                    if (!PermissionUtils.hasBluetoothConnect(context)) {
                         item {
                             WearFilledTonalButton(
                                 onClick = onPermission,
