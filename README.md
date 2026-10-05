@@ -1,1 +1,59 @@
-# WatchDrop
+<p align="center">
+  <img src="WatchDrop/app/src/main/res/drawable/ic_app_icon.png" width="160" alt="WatchDrop icon">
+</p>
+
+<h1 align="center">WatchDrop</h1>
+
+<p align="center">Передача файлов между Android-смартфоном и Wear OS через Bluetooth — без облака и стороннего сервера.</p>
+
+<p align="center">
+  <a href="../../actions/workflows/build-apk.yml"><img src="../../actions/workflows/build-apk.yml/badge.svg" alt="Android build"></a>
+  <a href="../../releases/latest"><img src="https://img.shields.io/github/v/release/S0nicRunn3rX/WatchDrop" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/Android%20%2F%20Wear%20OS-API%2030%2B-3DDC84" alt="Android API 30+">
+</p>
+
+## Возможности
+
+- передача телефон → часы и часы → телефон;
+- один APK для Android и Wear OS;
+- отправка одного или нескольких файлов через системное меню «Поделиться»;
+- уведомления «Передаётся / Скачивается» с процентами, прошедшим и оставшимся временем;
+- отдельное уведомление об успешном завершении или ошибке;
+- потоковая передача через Bluetooth RFCOMM без загрузки файла целиком в память;
+- Material 3 / Wear Material 3 с системной светлой или тёмной темой и динамическими цветами;
+- автоматическое размещение медиафайлов в стандартных каталогах Android.
+
+## Установка
+
+Скачайте APK со страницы [Releases](../../releases/latest) и установите его на телефон и часы. Устройства должны быть предварительно сопряжены по Bluetooth. После первого запуска разрешите доступ к «Устройствам поблизости» и уведомлениям.
+
+```bash
+adb install -r WatchDrop-v1.2.0-debug.apk
+```
+
+## Использование
+
+1. Включите приём в WatchDrop на обоих устройствах.
+2. Откройте файл, нажмите «Поделиться» и выберите WatchDrop.
+3. Выберите сопряжённое устройство и следите за прогрессом в уведомлении.
+
+Полученные изображения сохраняются в `Pictures/WatchDrop`, видео — в `Movies/WatchDrop`, аудио — в `Music/WatchDrop`, остальные файлы — в `Download/WatchDrop`.
+
+## Сборка
+
+Проект находится в каталоге `WatchDrop`. Требуются JDK 17 и Android SDK 37.
+
+```bash
+cd WatchDrop
+./gradlew :app:assembleDebug
+```
+
+GitHub Actions автоматически собирает APK при каждом push в `main`. Изменения по версиям перечислены в [CHANGELOG.md](CHANGELOG.md).
+
+## Ограничения
+
+WatchDrop использует собственный защищённый RFCOMM-протокол, поэтому приложение должно быть установлено на обоих устройствах. Это не реализация системного Bluetooth OPP.
+
+## Лицензия
+
+Исходный код предоставляется «как есть» для личного использования и доработки.
