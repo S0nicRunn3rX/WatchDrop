@@ -312,7 +312,44 @@ data class ShareUiState(
 @Composable
 private fun WearShareTheme(content: @Composable () -> Unit) {
     val context = LocalContext.current
-    WearMaterialTheme(colorScheme = dynamicColorScheme(context) ?: WearColorScheme(), content = content)
+    val dark = isSystemInDarkTheme()
+    val systemScheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (dark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } else {
+        if (dark) darkColorScheme() else lightColorScheme()
+    }
+    val wearScheme = WearColorScheme(
+        primary = systemScheme.primary,
+        primaryDim = systemScheme.primary,
+        primaryContainer = systemScheme.primaryContainer,
+        onPrimary = systemScheme.onPrimary,
+        onPrimaryContainer = systemScheme.onPrimaryContainer,
+        secondary = systemScheme.secondary,
+        secondaryDim = systemScheme.secondary,
+        secondaryContainer = systemScheme.secondaryContainer,
+        onSecondary = systemScheme.onSecondary,
+        onSecondaryContainer = systemScheme.onSecondaryContainer,
+        tertiary = systemScheme.tertiary,
+        tertiaryDim = systemScheme.tertiary,
+        tertiaryContainer = systemScheme.tertiaryContainer,
+        onTertiary = systemScheme.onTertiary,
+        onTertiaryContainer = systemScheme.onTertiaryContainer,
+        surfaceContainerLow = systemScheme.surfaceContainerLow,
+        surfaceContainer = systemScheme.surfaceContainer,
+        surfaceContainerHigh = systemScheme.surfaceContainerHigh,
+        onSurface = systemScheme.onSurface,
+        onSurfaceVariant = systemScheme.onSurfaceVariant,
+        outline = systemScheme.outline,
+        outlineVariant = systemScheme.outlineVariant,
+        background = systemScheme.background,
+        onBackground = systemScheme.onBackground,
+        error = systemScheme.error,
+        errorDim = systemScheme.error,
+        errorContainer = systemScheme.errorContainer,
+        onError = systemScheme.onError,
+        onErrorContainer = systemScheme.onErrorContainer
+    )
+    WearMaterialTheme(colorScheme = wearScheme, content = content)
 }
 
 @Composable
