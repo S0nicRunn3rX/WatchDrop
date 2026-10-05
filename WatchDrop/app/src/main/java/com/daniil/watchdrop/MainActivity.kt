@@ -76,9 +76,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val filePicker = registerForActivityResult(
-        ActivityResultContracts.OpenMultipleDocuments()
-    ) { uris ->
+    private val builtInFilePicker = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode != RESULT_OK) return@registerForActivityResult
+        val uris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            result.data?.getParcelableArrayListExtra(BuiltInFilePickerActivity.EXTRA_SELECTED_URIS, Uri::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            result.data?.getParcelableArrayListExtra<Uri>(BuiltInFilePickerActivity.EXTRA_SELECTED_URIS)
+        }.orEmpty()
         if (uris.isNotEmpty()) openShareScreen(uris)
     }
 
@@ -89,7 +96,9 @@ class MainActivity : ComponentActivity() {
             WatchDropRoot(
                 state = uiState,
                 onToggleReceiver = ::toggleReceiver,
-                onPickFiles = { filePicker.launch(arrayOf("*/*")) },
+                onPickFiles = {
+                    builtInFilePicker.launch(Intent(this, BuiltInFilePickerActivity::class.java))
+                },
                 onBluetoothSettings = ::openBluetoothSettings,
                 onRequestPermissions = ::requestRequiredPermissions
             )
