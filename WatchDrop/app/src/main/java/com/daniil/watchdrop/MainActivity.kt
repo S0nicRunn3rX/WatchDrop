@@ -284,7 +284,7 @@ private fun WearMainScreen(
                             .fillMaxWidth()
                             .transformedHeight(this, transformationSpec),
                         transformation = SurfaceTransformation(transformationSpec)
-                    ) { WearText("WatchDrop") }
+                    ) { WearText("WearDrop") }
                 }
                 item {
                     WearText(
@@ -351,7 +351,7 @@ private fun WearMainScreen(
                 }
                 item {
                     WearText(
-                        "Из других приложений: Поделиться → WatchDrop",
+                        "Из других приложений: Поделиться → WearDrop",
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -373,7 +373,7 @@ private fun PhoneMainScreen(
     onBluetoothSettings: () -> Unit,
     onRequestPermissions: () -> Unit
 ) {
-    Scaffold(topBar = { TopAppBar(title = { Text("WatchDrop") }) }) { padding ->
+    Scaffold(topBar = { TopAppBar(title = { Text("WearDrop") }) }) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -430,7 +430,7 @@ private fun PhoneMainScreen(
             }
             Spacer(Modifier.height(4.dp))
             Text(
-                "Для отправки из Галереи или файлового менеджера используйте: Поделиться → WatchDrop. " +
+                "Для отправки из Галереи или файлового менеджера используйте: Поделиться → WearDrop. " +
                     "Приложение должно быть установлено на обоих устройствах, а устройства — сопряжены.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

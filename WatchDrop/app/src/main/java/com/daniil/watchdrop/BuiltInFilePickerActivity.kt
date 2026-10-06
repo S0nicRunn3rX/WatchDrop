@@ -1,16 +1,11 @@
 package com.daniil.watchdrop
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import java.io.File
 import java.util.Locale
@@ -60,10 +54,6 @@ class BuiltInFilePickerActivity : ComponentActivity() {
     private var accessGranted by mutableStateOf(false)
     private val selectedFiles = mutableStateListOf<File>()
 
-    private val legacyPermission = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { refreshAccessAndFiles() }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         currentDirectory = storageRoot
@@ -76,7 +66,7 @@ class BuiltInFilePickerActivity : ComponentActivity() {
                     entries = entries,
                     selected = selectedFiles.toSet(),
                     accessGranted = accessGranted,
-                    onRequestAccess = ::requestStorageAccess,
+                    onRequestAccess = ::refreshAccessAndFiles,
                     onEntry = ::handleEntry,
                     onToggleFile = ::toggleFile,
                     onUp = ::goUp,
@@ -92,28 +82,7 @@ class BuiltInFilePickerActivity : ComponentActivity() {
         refreshAccessAndFiles()
     }
 
-    private fun hasStorageAccess(): Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        Environment.isExternalStorageManager()
-    } else {
-        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
-            PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun requestStorageAccess() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val appIntent = Intent(
-                Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                Uri.parse("package:$packageName")
-            )
-            runCatching { startActivity(appIntent) }
-                .onFailure {
-                    runCatching { startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)) }
-                        .onFailure { startActivity(Intent(Settings.ACTION_SETTINGS)) }
-                }
-        } else {
-            legacyPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
-    }
+    private fun hasStorageAccess(): Boolean = Environment.isExternalStorageManager()
 
     private fun refreshAccessAndFiles() {
         accessGranted = hasStorageAccess()
@@ -205,9 +174,13 @@ private fun FilePickerScreen(
                 Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)) {
                     Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text("Нужен доступ к файлам", fontWeight = FontWeight.SemiBold)
-                        Text("WatchDrop использует доступ только для выбранных вами файлов.")
+                        Text(
+                            "На Wear OS это разрешение выдаётся через ADB:\n" +
+                                "adb shell appops set com.daniil.watchdrop " +
+                                "MANAGE_EXTERNAL_STORAGE allow"
+                        )
                         Button(onClick = onRequestAccess, modifier = Modifier.fillMaxWidth()) {
-                            Text("Разрешить доступ")
+                            Text("Проверить доступ")
                         }
                     }
                 }

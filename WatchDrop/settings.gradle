@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = 'WatchDrop'
+rootProject.name = 'WearDrop'
 include ':app'

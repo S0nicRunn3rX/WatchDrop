@@ -3,7 +3,7 @@ package com.daniil.watchdrop;
 import java.util.UUID;
 
 final class Protocol {
-    static final String SERVICE_NAME = "WatchDrop";
+    static final String SERVICE_NAME = "WearDrop";
     static final UUID SERVICE_UUID = UUID.fromString("73b5cc40-a65f-4b5e-a8cd-80d44f54b143");
 
     static final int MAGIC = 0x57445250; // WDRP

@@ -85,7 +85,7 @@ public class BluetoothTransferService extends Service {
         }
 
         String action = intent == null ? null : intent.getAction();
-        ensureForeground("WatchDrop готов к работе");
+        ensureForeground("WearDrop готов к работе");
 
         if (ACTION_STOP_LISTENER.equals(action)) {
             AppPrefs.setReceiveEnabled(this, false);
@@ -206,7 +206,7 @@ public class BluetoothTransferService extends Service {
             int magic = in.readInt();
             int version = in.readInt();
             int count = in.readInt();
-            if (magic != Protocol.MAGIC) throw new IOException("Неверная сигнатура WatchDrop");
+            if (magic != Protocol.MAGIC) throw new IOException("Неверная сигнатура WearDrop");
             if (version != Protocol.VERSION) throw new IOException("Несовместимая версия протокола");
             if (count < 1 || count > Protocol.MAX_FILES_PER_TRANSFER) {
                 throw new IOException("Некорректное число файлов: " + count);
@@ -367,16 +367,16 @@ public class BluetoothTransferService extends Service {
 
         if (mime.startsWith("image/")) {
             collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            relativePath = "Pictures/WatchDrop";
+            relativePath = "Pictures/WearDrop";
         } else if (mime.startsWith("video/")) {
             collection = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-            relativePath = "Movies/WatchDrop";
+            relativePath = "Movies/WearDrop";
         } else if (mime.startsWith("audio/")) {
             collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-            relativePath = "Music/WatchDrop";
+            relativePath = "Music/WearDrop";
         } else {
             collection = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
-            relativePath = "Download/WatchDrop";
+            relativePath = "Download/WearDrop";
         }
 
         ContentValues values = new ContentValues();
@@ -478,14 +478,14 @@ public class BluetoothTransferService extends Service {
         NotificationManager manager = getSystemService(NotificationManager.class);
         NotificationChannel channel = new NotificationChannel(
                 CHANNEL_ID,
-                "Передача файлов WatchDrop",
+                "Передача файлов WearDrop",
                 NotificationManager.IMPORTANCE_LOW);
         channel.setDescription("Фоновый приём и передача файлов по Bluetooth");
         manager.createNotificationChannel(channel);
 
         NotificationChannel resultChannel = new NotificationChannel(
                 RESULT_CHANNEL_ID,
-                "Результаты передачи WatchDrop",
+                "Результаты передачи WearDrop",
                 NotificationManager.IMPORTANCE_DEFAULT);
         resultChannel.setDescription("Успешное завершение и ошибки передачи файлов");
         manager.createNotificationChannel(resultChannel);
@@ -513,7 +513,7 @@ public class BluetoothTransferService extends Service {
 
         return new Notification.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle("WatchDrop")
+                .setContentTitle("WearDrop")
                 .setContentText(text)
                 .setContentIntent(pendingIntent)
                 .setOngoing(AppPrefs.isReceiveEnabled(this) || activeTransfers.get() > 0)

@@ -504,7 +504,7 @@ private fun PhoneShareScreen(
     onPermission: () -> Unit,
     onClose: () -> Unit
 ) {
-    Scaffold(topBar = { TopAppBar(title = { Text("Отправить через WatchDrop") }) }) { padding ->
+    Scaffold(topBar = { TopAppBar(title = { Text("Отправить через WearDrop") }) }) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
